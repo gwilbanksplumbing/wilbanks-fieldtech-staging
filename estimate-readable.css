@@ -1,0 +1,93 @@
+/*
+ * Field App — Estimate Builder Readability Pass (CSS-only, no JS edits)
+ * Date: 2026-05-23
+ * Reason: Older technician reports text on Create Estimate is too small / dim.
+ *
+ * SAFETY: Scoped to the estimate bottom-sheet dialog ONLY using its unique
+ * class signature: a fixed-position, z-50, black/70 backdrop with items-end
+ * justify-center (a bottom sheet). This pattern only appears on the estimate
+ * builder in the live bundle (z-40 sm:items-center variant is a different
+ * dialog and is NOT affected).
+ *
+ * No JavaScript was changed. The bundle index-Dd5Dm7kM.js is untouched.
+ * If anything looks wrong, remove the <link> tag from index.html and it's gone.
+ */
+
+/* ── Scope root ─────────────────────────────────────────────────────────── */
+/* Tailwind escapes "/" as "\/" — the bg-black/70 class becomes .bg-black\/70 */
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center {
+  /* container marker — no styling here, just used as scope */
+}
+
+/* ── 1. Larger, clearer text ────────────────────────────────────────────── */
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .text-xs {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .text-sm {
+  font-size: 16px !important;
+  line-height: 1.4 !important;
+}
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .text-2xl {
+  font-size: 28px !important;
+  line-height: 1.2 !important;
+}
+
+/* ── 2. Higher contrast ─────────────────────────────────────────────────── */
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .text-muted-foreground {
+  color: #d4d4d8 !important; /* zinc-300, up from zinc-400/500 */
+}
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .text-foreground {
+  color: #fafafa !important;
+}
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center input::placeholder,
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center textarea::placeholder {
+  color: #a1a1aa !important;
+  opacity: 1 !important;
+}
+
+/* ── 3. Bigger tap targets and inputs ───────────────────────────────────── */
+
+/* Inputs: prevent iOS Safari zoom-on-focus by hitting 17px; raise from h-9 */
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center input,
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center textarea {
+  font-size: 17px !important;
+  min-height: 44px !important;
+}
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .h-9 {
+  height: 44px !important;
+}
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .h-12 {
+  height: 52px !important;
+}
+
+/* Save Draft / Send to Customer button text */
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .h-12 {
+  font-size: 17px !important;
+  font-weight: 600 !important;
+}
+
+/* "Add line item" and "+ Diagnostic/Trip Fee" buttons (text-sm links) */
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center button {
+  font-weight: 600 !important;
+}
+
+/* Make line-item delete icon easier to tap (was text-muted-foreground/40) */
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .col-span-1 {
+  min-height: 44px !important;
+}
+
+/* Total row — bump label */
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .font-semibold.text-muted-foreground {
+  font-size: 17px !important;
+  color: #e4e4e7 !important;
+}
