@@ -1,6 +1,6 @@
 // Wilbanks Field Tech Service Worker
 // Cache name: bump on every deployment that changes assets
-const CACHE_NAME = 'wc-fieldtech-v202605242200';
+const CACHE_NAME = 'wc-fieldtech-v202605242204';
 
 const URLS_TO_CACHE = [
   '.',
