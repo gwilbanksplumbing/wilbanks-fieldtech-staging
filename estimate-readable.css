@@ -134,11 +134,13 @@
 
 .fixed.inset-0.z-50.bg-black\/70.items-end.justify-center
   .col-span-2.text-right.text-sm.font-semibold.text-foreground.pr-1 {
-  font-size: 13px !important;
+  font-size: 12px !important;
   font-weight: 700 !important;
-  padding-right: 8px !important;
+  padding-right: 10px !important;
   white-space: nowrap !important;
-  overflow: visible !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  letter-spacing: -0.02em !important;
 }
 
 /* ── 6. Stack footer buttons vertically so 'Send to Customer' doesn't clip ─ */
