@@ -120,3 +120,23 @@
   font-size: 15px !important;
   color: #f4f4f5 !important;
 }
+
+/* ── 5. Line-item delete trashcan ─────────────────────────── */
+/*
+ * The trash button has class "col-span-1 ... text-muted-foreground/40"
+ * which renders at 40% opacity gray — almost invisible. Brighten to white
+ * and bump the icon size for easier tap target.
+ */
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center
+  button.col-span-1.text-muted-foreground\/40 {
+  color: #fafafa !important;
+  opacity: 1 !important;
+}
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center
+  button.col-span-1.text-muted-foreground\/40 svg {
+  width: 20px !important;
+  height: 20px !important;
+  stroke-width: 2.25 !important;
+}
