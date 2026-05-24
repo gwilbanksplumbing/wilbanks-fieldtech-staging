@@ -1,6 +1,6 @@
 // Wilbanks Field Tech Service Worker
 // Cache name: bump on every deployment that changes assets
-const CACHE_NAME = 'wc-fieldtech-v1';
+const CACHE_NAME = 'wc-fieldtech-v3';
 
 const URLS_TO_CACHE = [
   '.',
@@ -76,7 +76,8 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const jobId = event.notification.data && event.notification.data.jobId;
-  const url = jobId ? `/jobs/${jobId}` : '/jobs';
+  const base = self.registration.scope;
+  const url = jobId ? `${base}#/jobs/${jobId}` : base;
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
