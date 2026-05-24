@@ -1,12 +1,13 @@
-// Wilbanks Field Tech — STAGING Service Worker
-const CACHE_NAME = 'wc-fieldtech-rebuild-v1';
-const BASE = '/wilbanks-fieldtech-staging/rebuild';
+// Wilbanks Field Tech Service Worker
+// Cache name: bump on every deployment that changes assets
+const CACHE_NAME = 'wc-fieldtech-v1';
 
 const URLS_TO_CACHE = [
-  BASE + '/',
-  BASE + '/index.html',
+  '.',
+  './index.html',
 ];
 
+// ── Install ──────────────────────────────────────────────────────────────────
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(URLS_TO_CACHE))
@@ -14,6 +15,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
+// ── Activate ─────────────────────────────────────────────────────────────────
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -23,12 +25,17 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// ── Fetch (network-first for API, cache-first for assets) ────────────────────
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+
+  // Always go to network for API calls
   if (url.hostname.includes('railway.app')) {
     event.respondWith(fetch(event.request));
     return;
   }
+
+  // Cache-first for same-origin assets
   event.respondWith(
     caches.match(event.request).then((cached) =>
       cached || fetch(event.request).then((response) => {
@@ -42,17 +49,22 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
+// ── Push notifications ────────────────────────────────────────────────────────
 self.addEventListener('push', (event) => {
   let data = { title: 'New Job', body: 'You have a new job assigned.' };
-  try { if (event.data) data = event.data.json(); } catch (_) {}
+  try {
+    if (event.data) data = event.data.json();
+  } catch (_) {}
+
   event.waitUntil(
     self.registration.showNotification(data.title || 'Wilbanks Field Tech', {
       body: data.body || '',
-      icon: BASE + '/icons/icon-192.png',
-      badge: BASE + '/icons/badge-72.png',
+      icon: '/icons/icon-192.png',
+      badge: '/icons/badge-72.png',
       tag: data.tag || 'job-notification',
       data: data,
     }).then(() => {
+      // Set badge count to 1 on new push
       return self.navigator && self.navigator.setAppBadge
         ? self.navigator.setAppBadge(1)
         : Promise.resolve();
@@ -60,10 +72,11 @@ self.addEventListener('push', (event) => {
   );
 });
 
+// ── Notification click ────────────────────────────────────────────────────────
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const jobId = event.notification.data && event.notification.data.jobId;
-  const url = jobId ? BASE + '/jobs/' + jobId : BASE + '/jobs';
+  const url = jobId ? `/jobs/${jobId}` : '/jobs';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
@@ -74,6 +87,7 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
+// ── Message handler (badge clearing) ─────────────────────────────────────────
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'CLEARBADGE') {
     self.clearAppBadge && self.clearAppBadge();
