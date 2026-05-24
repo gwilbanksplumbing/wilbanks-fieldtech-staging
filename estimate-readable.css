@@ -121,6 +121,26 @@
   color: #f4f4f5 !important;
 }
 
+/* ── 5d. Line-item Amt cell — keep it inside its column ───────────── */
+/*
+ * Amt cell signature:
+ *   col-span-2 text-right text-sm font-semibold text-foreground pr-1
+ *
+ * The v72 .text-sm bump (14px -> 16px) was making 3+ digit dollar amounts
+ * ($100+) overflow into the trashcan column. Pull this specific cell back
+ * to a fit-friendly size and add right padding to keep the dollar amount
+ * from visually touching the trashcan icon.
+ */
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center
+  .col-span-2.text-right.text-sm.font-semibold.text-foreground.pr-1 {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  padding-right: 8px !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
 /* ── 6. Stack footer buttons vertically so 'Send to Customer' doesn't clip ─ */
 /*
  * The estimate footer is a horizontal flex row of two flex-1 buttons. On
