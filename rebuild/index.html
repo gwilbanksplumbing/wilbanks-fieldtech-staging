@@ -1,29 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#09090b" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="WC Rebuild Preview" />
+    <title>Wilbanks Field Tech</title>
     <link rel="manifest" href="/wilbanks-fieldtech-staging/rebuild/manifest.json" />
     <link rel="apple-touch-icon" href="/wilbanks-fieldtech-staging/rebuild/icons/icon-192.png" />
-    <title>WC Rebuild Preview</title>
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register(
-          '/wilbanks-fieldtech-staging/rebuild/sw.js',
-          { scope: '/wilbanks-fieldtech-staging/rebuild/' }
-        ).catch(function(e) { console.warn('[sw]', e); });
-      }
-    </script>
-    <script type="module" crossorigin src="/wilbanks-fieldtech-staging/rebuild/assets/index-rWK5RAeT.js"></script>
-    <link rel="stylesheet" crossorigin href="/wilbanks-fieldtech-staging/rebuild/assets/index-DrF67oiS.css">
+    <link rel="stylesheet" crossorigin href="/wilbanks-fieldtech-staging/rebuild/assets/index-Bxd9pTNg.css">
   </head>
   <body>
-    <div id="staging-banner" style="position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#7c3aed;color:#fff;font-family:system-ui,sans-serif;font-weight:700;font-size:13px;padding:6px 10px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.3);letter-spacing:.5px;">&#9888;&#65039; REBUILD PREVIEW &#8212; Not Production</div>
-    <style>body { padding-top: 32px !important; }</style>
     <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register(
+            '/wilbanks-fieldtech-staging/rebuild/sw.js',
+            { scope: '/wilbanks-fieldtech-staging/rebuild/' }
+          );
+        });
+      }
+    </script>
+    <script type="module" crossorigin src="/wilbanks-fieldtech-staging/rebuild/assets/index-CwSZD7QO.js"></script>
   </body>
 </html>
