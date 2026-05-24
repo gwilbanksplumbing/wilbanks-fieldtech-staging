@@ -91,3 +91,19 @@
   font-size: 17px !important;
   color: #e4e4e7 !important;
 }
+
+/* ── 4. Column header row (Description / Qty / Price / Amt) ─────────────── */
+/*
+ * The header is a grid row of <span class="text-xs text-muted-foreground col-span-N ...">
+ * that sits above the line items. Make it noticeably larger and brighter so
+ * the older tech can scan the columns clearly.
+ */
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .grid.grid-cols-12 > .text-xs.text-muted-foreground,
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .grid.grid-cols-12 > span.text-xs {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #f4f4f5 !important; /* zinc-100, near-white */
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
