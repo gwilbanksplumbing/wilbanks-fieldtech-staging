@@ -121,7 +121,21 @@
   color: #f4f4f5 !important;
 }
 
-/* ── 5. Line-item delete trashcan ─────────────────────────── */
+/* ── 5b. White borders on line-item fields (Description, Qty, Price) ──── */
+/*
+ * All three line-item fields share the signature:
+ *   bg-muted/50 border border-border/50 rounded-xl
+ * The border-border/50 is gray at 50% opacity — nearly invisible.
+ * Override to a solid white border for clear field outlines.
+ */
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center
+  .bg-muted\/50.border.border-border\/50.rounded-xl {
+  border-color: #fafafa !important;
+  border-width: 1.5px !important;
+}
+
+/* ── 5c. Line-item delete trashcan ──────────────────────── */
 /*
  * The trash button has class "col-span-1 ... text-muted-foreground/40"
  * which renders at 40% opacity gray — almost invisible. Brighten to white
