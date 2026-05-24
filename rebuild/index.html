@@ -14,26 +14,14 @@
   <body>
     <div id="root"></div>
     <script>
-      // Unregister any stale service workers outside this scope before anything loads
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          var reloaded = false;
-          registrations.forEach(function(reg) {
-            var scope = reg.scope || '';
-            // Kill any SW NOT scoped to this exact path
-            if (scope.indexOf('/wilbanks-fieldtech-staging/rebuild/') === -1) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          regs.forEach(function(reg) {
+            if ((reg.scope || '').indexOf('/wilbanks-fieldtech-staging/rebuild/') === -1) {
               reg.unregister();
-              reloaded = true;
             }
           });
-          if (reloaded) {
-            // Clear all caches too
-            caches.keys().then(function(keys) {
-              keys.forEach(function(k) { caches.delete(k); });
-            });
-          }
         });
-        // Register correct SW
         window.addEventListener('load', function() {
           navigator.serviceWorker.register(
             '/wilbanks-fieldtech-staging/rebuild/sw.js',
@@ -42,6 +30,6 @@
         });
       }
     </script>
-    <script type="module" crossorigin src="/wilbanks-fieldtech-staging/rebuild/assets/index-CwSZD7QO.js"></script>
+    <script type="module" crossorigin src="/wilbanks-fieldtech-staging/rebuild/assets/index-C3P1AtSO.js"></script>
   </body>
 </html>
