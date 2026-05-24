@@ -94,16 +94,29 @@
 
 /* ── 4. Column header row (Description / Qty / Price / Amt) ─────────────── */
 /*
- * The header is a grid row of <span class="text-xs text-muted-foreground col-span-N ...">
- * that sits above the line items. Make it noticeably larger and brighter so
- * the older tech can scan the columns clearly.
+ * The actual header row in the bundle is:
+ *   <div class="grid grid-cols-12 gap-1 text-[10px] text-muted-foreground/70 px-1">
+ *     <span class="col-span-5">Description</span> ...
+ *
+ * The styling lives on the PARENT div (text-[10px] and text-muted-foreground/70).
+ * The spans inherit. So we target the parent's exact class signature.
  */
 
-.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .grid.grid-cols-12 > .text-xs.text-muted-foreground,
-.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center .grid.grid-cols-12 > span.text-xs {
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center
+  .grid.grid-cols-12.gap-1.text-\[10px\].text-muted-foreground\/70 {
   font-size: 15px !important;
   font-weight: 700 !important;
   color: #f4f4f5 !important; /* zinc-100, near-white */
-  letter-spacing: 0.02em;
+  opacity: 1 !important;     /* defeat the /70 alpha */
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+/* Also bump the "LINE ITEMS" label above the header row */
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center
+  p.text-xs.font-semibold.text-muted-foreground.uppercase.tracking-wide {
+  font-size: 15px !important;
+  color: #f4f4f5 !important;
 }
