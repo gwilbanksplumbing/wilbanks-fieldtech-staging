@@ -121,6 +121,27 @@
   color: #f4f4f5 !important;
 }
 
+/* ── 6. Stack footer buttons vertically so 'Send to Customer' doesn't clip ─ */
+/*
+ * The estimate footer is a horizontal flex row of two flex-1 buttons. On
+ * narrow iPhones the 'Send to Customer' label gets cut off. Force the
+ * container to stack the buttons vertically so each gets full width.
+ * Container class signature:
+ *   shrink-0 px-5 py-4 border-t border-border flex gap-3
+ */
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center
+  .shrink-0.border-t.border-border.flex.gap-3 {
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.fixed.inset-0.z-50.bg-black\/70.items-end.justify-center
+  .shrink-0.border-t.border-border.flex.gap-3 > button {
+  width: 100% !important;
+  font-size: 16px !important;
+}
+
 /* ── 5b. White borders on line-item fields (Description, Qty, Price) ──── */
 /*
  * All three line-item fields share the signature:
