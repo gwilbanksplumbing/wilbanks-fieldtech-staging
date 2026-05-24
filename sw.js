@@ -1,5 +1,5 @@
 // STAGING build — separate cache namespace
-const CACHE = "wc-fieldtech-v80";
+const CACHE = "wc-fieldtech-v81";
 const API_BASE = "https://wilbanks-server-production.up.railway.app";
 
 self.addEventListener("install", () => {
