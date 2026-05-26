@@ -652,20 +652,19 @@
     dismissOverlay();
     window.__WC_USER = currentUser;
     window.__WC_LOGOUT = logout;
-    // Restore the hash route from before the refresh
+    // Restore the hash route from before the refresh, or default to /jobs
     try {
       const savedHash = sessionStorage.getItem('wc_last_hash');
-      if (savedHash && savedHash !== '#/' && savedHash !== '#') {
-        sessionStorage.removeItem('wc_last_hash');
-        // Try immediately, then retry after React has mounted — wouter picks up
-        // window.location.hash changes via its own popstate/hashchange listeners
-        const _applyHash = () => {
-          try { window.location.hash = savedHash.replace(/^#/, ''); } catch {}
-        };
-        _applyHash();
-        setTimeout(_applyHash, 150);
-        setTimeout(_applyHash, 500);
-      }
+      const targetHash = (savedHash && savedHash !== '#/' && savedHash !== '#') ? savedHash : '/jobs';
+      if (savedHash) sessionStorage.removeItem('wc_last_hash');
+      // Try immediately, then retry after React has mounted — wouter picks up
+      // window.location.hash changes via its own popstate/hashchange listeners
+      const _applyHash = () => {
+        try { window.location.hash = targetHash.replace(/^#/, ''); } catch {}
+      };
+      _applyHash();
+      setTimeout(_applyHash, 150);
+      setTimeout(_applyHash, 500);
     } catch {}
     // Sync display name into the field tech app's localStorage key
     // so the top-left header always shows the logged-in user's name
