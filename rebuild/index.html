@@ -1,19 +1,52 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#09090b" />
+
+    <!-- PWA Meta -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Field Tech" />
-    <link rel="manifest" href="/wilbanks-fieldtech-staging/rebuild/manifest.json" />
-    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-    <title>Wilbanks Field Tech</title>
-    <script type="module" crossorigin src="/wilbanks-fieldtech-staging/rebuild/assets/index-U3LlXlkI.js"></script>
-    <link rel="stylesheet" crossorigin href="/wilbanks-fieldtech-staging/rebuild/assets/index-5sM-yQSd.css">
+    <meta name="apple-mobile-web-app-title" content="WC Field Tech" />
+    <meta name="theme-color" content="#1a2540" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- PWA Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png" />
+    <link rel="manifest" href="./manifest.json" />
+
+    <title>WC Field Tech</title>
+    <style>
+  html, body { background: #090c14; margin: 0; padding: 0; height: 100%; }
+  body { position: fixed; width: 100%; height: 100%; overflow: hidden; }
+  #root { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #09090b; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    </style>
+    <script>
+      if (window.navigator.standalone) {
+        window.addEventListener('load', function() {
+          setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 300);
+          setTimeout(function() { window.dispatchEvent(new Event('resize')); }, 800);
+        });
+      }
+    </script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js', {scope: './'}).catch(function(e) {
+          console.warn('[sw]', e);
+        });
+      }
+    </script>
+    <script src="./auth-layer.js?v=1779766129"></script>
+    <script type="module" crossorigin src="./assets/index-uoMvg4cp.js?v=1779766129"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-5sM-yQSd.css">
+    <link rel="stylesheet" href="./estimate-readable.css?v=1779604000">
   </head>
   <body>
+    <div id="staging-banner" style="position:fixed;top:0;left:0;right:0;z-index:2147483647;background:#fbbf24;color:#111827;font-family:system-ui,sans-serif;font-weight:700;font-size:13px;padding:6px 10px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.2);letter-spacing:.5px;">⚠️ STAGING — Test Data Only</div>
+    <style>body{padding-top:32px !important;}</style>
     <div id="root"></div>
   </body>
 </html>
