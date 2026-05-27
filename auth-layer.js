@@ -649,26 +649,19 @@
   }
 
   function launchApp() {
-    // Set last_active so the React bundle's fn() inactivity check returns true
-    // Without this, the default route renders null (black screen) after login
+    // Set last_active so inactivity check passes
     try { localStorage.setItem('wc_last_active', Date.now().toString()); } catch {}
-    dismissOverlay();
     window.__WC_USER = currentUser;
     window.__WC_LOGOUT = logout;
-    // Restore the hash route from before the refresh, or default to /jobs
+    // Set the hash BEFORE showing the app so React renders the right route immediately
     try {
       const savedHash = sessionStorage.getItem('wc_last_hash');
-      const targetHash = (savedHash && savedHash !== '#/' && savedHash !== '#') ? savedHash : '/jobs';
+      const targetHash = (savedHash && savedHash !== '#/' && savedHash !== '#') ? savedHash : 'jobs';
       if (savedHash) sessionStorage.removeItem('wc_last_hash');
-      // Try immediately, then retry after React has mounted — wouter picks up
-      // window.location.hash changes via its own popstate/hashchange listeners
-      const _applyHash = () => {
-        try { window.location.hash = targetHash.replace(/^#/, ''); } catch {}
-      };
-      _applyHash();
-      setTimeout(_applyHash, 150);
-      setTimeout(_applyHash, 500);
+      window.location.hash = targetHash.replace(/^#/, '');
     } catch {}
+    // NOW show the app — React will render with the correct hash already set
+    dismissOverlay();
     // Sync display name into the field tech app's localStorage key
     // so the top-left header always shows the logged-in user's name
     syncFieldTechName(currentUser);
