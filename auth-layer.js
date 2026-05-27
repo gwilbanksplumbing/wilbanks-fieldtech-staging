@@ -649,6 +649,9 @@
   }
 
   function launchApp() {
+    // Set last_active so the React bundle's fn() inactivity check returns true
+    // Without this, the default route renders null (black screen) after login
+    try { localStorage.setItem('wc_last_active', Date.now().toString()); } catch {}
     dismissOverlay();
     window.__WC_USER = currentUser;
     window.__WC_LOGOUT = logout;
