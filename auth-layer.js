@@ -662,6 +662,21 @@
     } catch {}
     // NOW show the app — React will render with the correct hash already set
     dismissOverlay();
+    // Force React's hash router to re-evaluate the route — without this,
+    // the app shows a black screen until the user manually refreshes,
+    // because React mounted while #root was hidden and never rendered.
+    setTimeout(() => {
+      const h = window.location.hash;
+      window.dispatchEvent(new HashChangeEvent('hashchange', {
+        newURL: window.location.href,
+        oldURL: window.location.href
+      }));
+      // Belt-and-suspenders: also set hash to itself to trigger router
+      if (h) {
+        window.location.hash = '';
+        setTimeout(() => { window.location.hash = h.replace(/^#/, ''); }, 20);
+      }
+    }, 50);
     // Sync display name into the field tech app's localStorage key
     // so the top-left header always shows the logged-in user's name
     syncFieldTechName(currentUser);
