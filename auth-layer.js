@@ -660,23 +660,28 @@
       if (savedHash) sessionStorage.removeItem('wc_last_hash');
       window.location.hash = targetHash.replace(/^#/, '');
     } catch {}
-    // NOW show the app — React will render with the correct hash already set
-    dismissOverlay();
-    // Force React's hash router to re-evaluate the route — without this,
-    // the app shows a black screen until the user manually refreshes,
-    // because React mounted while #root was hidden and never rendered.
-    setTimeout(() => {
-      const h = window.location.hash;
-      window.dispatchEvent(new HashChangeEvent('hashchange', {
-        newURL: window.location.href,
-        oldURL: window.location.href
-      }));
-      // Belt-and-suspenders: also set hash to itself to trigger router
-      if (h) {
-        window.location.hash = '';
-        setTimeout(() => { window.location.hash = h.replace(/^#/, ''); }, 20);
-      }
-    }, 50);
+    // Unhide #root so React can render, but keep the overlay FULLY OPAQUE
+    // (covering everything) until React has committed the jobs route. We must
+    // NOT start the overlay fade yet: if React briefly shows /login it would
+    // bleed through a fading overlay (the "login flash" bug).
+    const root = document.getElementById("root");
+    if (root) root.style.display = "";
+    // Force React's hash router to re-evaluate the route WITHOUT ever blanking
+    // the hash. Blanking the hash ('') makes React fall back to its default
+    // /login route, which is the login form that flashed. A plain hashchange
+    // event with the hash left intact nudges the router to the jobs route and
+    // still avoids the original black-screen bug (React mounted while #root
+    // was hidden and never rendered).
+    window.dispatchEvent(new HashChangeEvent('hashchange', {
+      newURL: window.location.href,
+      oldURL: window.location.href
+    }));
+    // Dismiss the overlay (start the fade) only AFTER React has had a chance to
+    // commit the jobs route — next frame + a short delay. Until then the
+    // overlay stays fully opaque, so no login frame is ever visible.
+    requestAnimationFrame(() => {
+      setTimeout(dismissOverlay, 100);
+    });
     // Sync display name into the field tech app's localStorage key
     // so the top-left header always shows the logged-in user's name
     syncFieldTechName(currentUser);
