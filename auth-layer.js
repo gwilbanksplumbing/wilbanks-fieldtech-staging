@@ -660,28 +660,35 @@
       if (savedHash) sessionStorage.removeItem('wc_last_hash');
       window.location.hash = targetHash.replace(/^#/, '');
     } catch {}
-    // Unhide #root so React can render, but keep the overlay FULLY OPAQUE
-    // (covering everything) until React has committed the jobs route. We must
-    // NOT start the overlay fade yet: if React briefly shows /login it would
-    // bleed through a fading overlay (the "login flash" bug).
+    // Unhide #root so React can render UNDERNEATH the still-opaque overlay.
+    // The overlay covers everything at opacity 1, so any momentary /login
+    // render during the hash dance below is invisible. We deliberately do NOT
+    // call dismissOverlay() yet — the fade must not start until React is on jobs.
     const root = document.getElementById("root");
     if (root) root.style.display = "";
-    // Force React's hash router to re-evaluate the route WITHOUT ever blanking
-    // the hash. Blanking the hash ('') makes React fall back to its default
-    // /login route, which is the login form that flashed. A plain hashchange
-    // event with the hash left intact nudges the router to the jobs route and
-    // still avoids the original black-screen bug (React mounted while #root
-    // was hidden and never rendered).
-    window.dispatchEvent(new HashChangeEvent('hashchange', {
-      newURL: window.location.href,
-      oldURL: window.location.href
-    }));
-    // Dismiss the overlay (start the fade) only AFTER React has had a chance to
-    // commit the jobs route — next frame + a short delay. Until then the
-    // overlay stays fully opaque, so no login frame is ever visible.
-    requestAnimationFrame(() => {
-      setTimeout(dismissOverlay, 100);
-    });
+    // Force React's hash router to actually navigate to jobs. The destructive
+    // hash='' -> restore-to-jobs sequence is LOAD-BEARING: a plain hashchange
+    // with the hash unchanged does NOT move React off /login. Blanking then
+    // restoring the hash is what makes the router re-evaluate and land on jobs.
+    // It momentarily renders /login, but that is hidden behind the opaque
+    // overlay, so there is no visible flash.
+    const targetHashValue = window.location.hash.replace(/^#/, '');
+    setTimeout(() => {
+      window.dispatchEvent(new HashChangeEvent('hashchange', {
+        newURL: window.location.href,
+        oldURL: window.location.href
+      }));
+      window.location.hash = '';
+      setTimeout(() => {
+        window.location.hash = targetHashValue || 'jobs';
+        // Hash is now restored to jobs. Let React commit the jobs route, THEN
+        // fade the overlay. Overlay stayed fully opaque the entire dance, so
+        // the user only ever sees a clean fade from overlay straight to jobs.
+        requestAnimationFrame(() => {
+          setTimeout(dismissOverlay, 100);
+        });
+      }, 20);
+    }, 50);
     // Sync display name into the field tech app's localStorage key
     // so the top-left header always shows the logged-in user's name
     syncFieldTechName(currentUser);
