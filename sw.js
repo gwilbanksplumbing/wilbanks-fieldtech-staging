@@ -1,17 +1,14 @@
 // Wilbanks Field Tech Service Worker
 // Cache name: bump on every deployment that changes assets
-const CACHE_NAME = 'wc-fieldtech-v20260528-FT29';
+const CACHE_NAME = 'wc-fieldtech-v20260531-FT32';
 
-const URLS_TO_CACHE = [
-  '.',
-  './index.html',
-];
+// Note: index.html is intentionally NOT precached. It is served network-first
+// (see fetch handler) so the installed PWA always picks up the current hashed
+// bundle after a deploy and can never get stuck on a stale shell (black screen).
+const URLS_TO_CACHE = [];
 
 // ── Install ──────────────────────────────────────────────────────────────────
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(URLS_TO_CACHE))
-  );
   self.skipWaiting();
 });
 
@@ -25,23 +22,55 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// ── Fetch (network-first for API, cache-first for assets) ────────────────────
+// ── Fetch ────────────────────────────────────────────────────────────────────
+// Strategy:
+//   - API calls (railway.app): always network, never cached.
+//   - Navigations / HTML (index.html): NETWORK-FIRST, fall back to cache only
+//     when offline. This guarantees the installed PWA always loads the current
+//     shell pointing at the live hashed bundle, so a stale cache can never
+//     black-screen the app.
+//   - Everything else (hashed assets, icons, css): cache-first (immutable).
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
+  const req = event.request;
+  const url = new URL(req.url);
 
   // Always go to network for API calls
   if (url.hostname.includes('railway.app')) {
-    event.respondWith(fetch(event.request));
+    event.respondWith(fetch(req));
     return;
   }
 
-  // Cache-first for same-origin assets
+  // Network-first for navigations and the HTML document
+  const isHtml =
+    req.mode === 'navigate' ||
+    (req.destination === 'document') ||
+    url.pathname.endsWith('/') ||
+    url.pathname.endsWith('/index.html');
+
+  if (isHtml && req.method === 'GET') {
+    event.respondWith(
+      fetch(req)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
+          }
+          return response;
+        })
+        .catch(() =>
+          caches.match(req).then((cached) => cached || caches.match('./index.html'))
+        )
+    );
+    return;
+  }
+
+  // Cache-first for same-origin static assets (hashed → immutable)
   event.respondWith(
-    caches.match(event.request).then((cached) =>
-      cached || fetch(event.request).then((response) => {
-        if (response && response.status === 200 && event.request.method === 'GET') {
+    caches.match(req).then((cached) =>
+      cached || fetch(req).then((response) => {
+        if (response && response.status === 200 && req.method === 'GET') {
           const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
         }
         return response;
       })
