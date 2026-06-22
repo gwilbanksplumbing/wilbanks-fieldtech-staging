@@ -1,6 +1,6 @@
 // Wilbanks Field Tech Service Worker
 // Cache name: bump on every deployment that changes assets
-const CACHE_NAME = 'wc-fieldtech-v20260622-FT67-calllog';
+const CACHE_NAME = 'wc-fieldtech-v20260622-FT68-calllog';
 
 // Note: index.html is intentionally NOT precached. It is served network-first
 // (see fetch handler) so the installed PWA always picks up the current hashed
