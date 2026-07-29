@@ -1,6 +1,6 @@
 // Wilbanks Field Tech Service Worker
 // Cache name: bump on every deployment that changes assets
-const CACHE_NAME = 'wc-fieldtech-staging-autogrow-desc-20260729-041956';
+const CACHE_NAME = 'wc-fieldtech-staging-logofix-20260729-143000';
 
 // Note: index.html is intentionally NOT precached. It is served network-first
 // (see fetch handler) so the installed PWA always picks up the current hashed
